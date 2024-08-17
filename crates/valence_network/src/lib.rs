@@ -15,6 +15,7 @@ use anyhow::Context;
 pub use async_trait::async_trait;
 use bevy_app::prelude::*;
 use bevy_ecs::prelude::*;
+use bevy_ecs::schedule::NodeId::System;
 use connect::do_accept_loop;
 pub use connect::HandshakeData;
 use flume::{Receiver, Sender};
@@ -266,10 +267,10 @@ impl Default for NetworkSettings {
             callbacks: ErasedNetworkCallbacks::default(),
             tokio_handle: None,
             max_connections: 1024,
-            max_players: 20,
+            max_players: 50,
             address: SocketAddrV4::new(Ipv4Addr::new(0, 0, 0, 0), 25565).into(),
-            connection_mode: ConnectionMode::Online {
-                prevent_proxy_connections: false,
+            connection_mode: ConnectionMode::Velocity {
+                secret: Arc::from("secret")
             },
             incoming_byte_limit: 2097152, // 2 MiB
             outgoing_byte_limit: 8388608, // 8 MiB
